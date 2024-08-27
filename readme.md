@@ -15,22 +15,28 @@ This project analyzes Walmart sales data to identify trends, seasonal patterns, 
    git clone https://github.com/ambarkr21/walmart-sales-analysis.git
    
    cd walmart-sales-analysis
+   
 Create a virtual environment (optional but recommended):
 
 python -m venv env
+
 Activate the virtual environment:
 
 On Windows:
+
 env\Scripts\activate
 
 
 pip install -r requirements.txt
+
 Usage
+
 Ensure the dataset (walmart_sales_data.csv) is in the same directory as main.py.
 
 Run the analysis:
 
 python main.py
+
 The script will generate visualizations for the sales trends, holiday impacts, store-wise sales, and the correlation between sales and external factors. It also includes a sales forecasting model.
 
 Features
