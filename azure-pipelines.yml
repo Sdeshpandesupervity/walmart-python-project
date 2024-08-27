@@ -11,6 +11,7 @@ variables:
   SONARQUBE_SERVICE_CONNECTION: 'sonarqube'
   SONARQUBE_URL: 'https://sonar-dev.supervity.ai'
   BUILD_SOURCESDIRECTORY: $(Build.SourcesDirectory)
+  SONARQUBE_TOKEN: "sqa_18ca7a4a75620b175378099dc7730a1eddf2a3b6"
 
 stages:
 - stage: SonarQubeAnalysis
