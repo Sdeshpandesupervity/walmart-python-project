@@ -13,6 +13,7 @@ This project analyzes Walmart sales data to identify trends, seasonal patterns, 
 1. **Clone the repository**:
    
    git clone https://github.com/ambarkr21/walmart-sales-analysis.git
+   
    cd walmart-sales-analysis
 Create a virtual environment (optional but recommended):
 
