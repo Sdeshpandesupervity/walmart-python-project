@@ -1,0 +1,55 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  SONARQUBE_PROJECT_KEY: 'Infra-Test_Infra-Test_c5e09591-38a9-4945-855d-ef8425949b9b'
+  SONARQUBE_PROJECT_NAME: 'walmart-python-project'
+  SONARQUBE_PROJECT_VERSION: '1.0'
+  SONARQUBE_SERVICE_CONNECTION: 'sonarqube'
+  SONARQUBE_URL: 'https://sonar-dev.supervity.ai'
+  BUILD_SOURCESDIRECTORY: $(Build.SourcesDirectory)
+
+stages:
+- stage: SonarQubeAnalysis
+  displayName: 'SonarQube Analysis'
+  jobs:
+  - job: Analyze
+    displayName: 'Analyze'
+    steps:
+    - checkout: self
+      persistCredentials: true
+
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+        addToPath: true
+
+    - script: |
+        python -m pip install --upgrade pip
+        python -m pip install -r $(BUILD_SOURCESDIRECTORY)/src/requirements.txt
+        python $(BUILD_SOURCESDIRECTORY)/src/setup.py build
+      displayName: 'Install Dependencies and Build Project'
+
+    - task: SonarQubePrepare@6
+      inputs:
+        SonarQube: $(SONARQUBE_SERVICE_CONNECTION)
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: $(SONARQUBE_PROJECT_KEY)
+        cliSources: $(BUILD_SOURCESDIRECTORY)/src
+        extraProperties: |
+          sonar.projectName=$(SONARQUBE_PROJECT_NAME)
+          sonar.projectVersion=$(SONARQUBE_PROJECT_VERSION)
+          sonar.host.url=$(SONARQUBE_URL)
+          sonar.login=$(SONARQUBE_TOKEN)  # Ensure SONARQUBE_TOKEN is set securely
+
+    - task: SonarQubeAnalyze@6
+      inputs:
+        jdkversion: 'JAVA_HOME_17_X64'  # Adjust if necessary
+
+    - task: SonarQubePublish@6
+      inputs:
+        pollingTimeoutSec: '300'
