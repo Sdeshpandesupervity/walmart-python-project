@@ -27,11 +27,7 @@ stages:
         versionSpec: '3.x'
         addToPath: true
 
-    - script: |
-        python -m pip install --upgrade pip
-        python -m pip install -r $(BUILD_SOURCESDIRECTORY)/src/requirements.txt
-        python $(BUILD_SOURCESDIRECTORY)/src/setup.py build
-      displayName: 'Install Dependencies and Build Project'
+
 
     - task: SonarQubePrepare@6
       inputs:
