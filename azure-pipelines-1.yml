@@ -9,7 +9,7 @@ pool:
 
 variables:
   SONARQUBE_SERVER: 'https://sonar-dev.supervity.ai/'
-  SONARQUBE_TOKEN: 'sqa_18ca7a4a75620b175378099dc7730a1eddf2a3b6'  # Securely stored in Azure DevOps
+  SONARQUBE_TOKEN: 'sqa_18ca7a4a75620b175378099dc7730a1eddf2a3b6'  # Make sure this is securely stored in Azure DevOps
   SONAR_PROJECT_KEY: 'Infra-Test_Infra-Test_c5e09591-38a9-4945-855d-ef8425949b9b'
   SONAR_PROJECT_NAME: 'Infra-Test'
   SONAR_PROJECT_VERSION: '1.0'
@@ -23,12 +23,12 @@ steps:
 
 - script: |
     python -m pip install --upgrade pip
-    pip install -r requirements.txt.txt
+    pip install -r requirements.txt
   displayName: 'Install dependencies'
 
 - task: SonarQubePrepare@6
   inputs:
-    SonarQube: 'SonarQube'  # This should match the name of your SonarQube service connection in Azure DevOps
+    SonarQube: 'sonarqube'
     scannerMode: 'CLI'
     configMode: 'manual'
     cliProjectKey: '$(SONAR_PROJECT_KEY)'
@@ -36,4 +36,15 @@ steps:
     cliSources: '.'
     extraProperties: |
       sonar.python.version=3.x
-      sonar.project
+      sonar.projectVersion=$(SONAR_PROJECT_VERSION)
+      sonar.host.url=$(SONARQUBE_SERVER)
+      sonar.login=$(SONARQUBE_TOKEN)
+  displayName: 'Prepare SonarQube Analysis'
+
+- task: SonarQubeAnalyze@6
+  displayName: 'Run SonarQube Analysis'
+
+- task: SonarQubePublish@6
+  inputs:
+    pollingTimeoutSec: '300'
+  displayName: 'Publish Quality Gate Result'
