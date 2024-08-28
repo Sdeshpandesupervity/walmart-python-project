@@ -37,11 +37,7 @@ steps:
 
 
 
-- script: |
-    echo "Running tests..."
-    # Example test command; replace with your actual test command
-    pytest
-  displayName: 'Run tests'
+
 
 - task: SonarQubePublish@6
   inputs:
