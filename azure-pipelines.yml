@@ -27,7 +27,10 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
-    pip install sonar-scanner
+    echo "Installing SonarQube Scanner..."
+    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ variables.SONAR_SCANNER_VERSION }}-linux.zip
+    unzip sonar-scanner-cli-${{ variables.SONAR_SCANNER_VERSION }}-linux.zip
+    export PATH=$PATH:$(pwd)/sonar-scanner-${{ variables.SONAR_SCANNER_VERSION }}-linux/bin
   displayName: 'Install SonarQube Scanner'
 
 - script: |
