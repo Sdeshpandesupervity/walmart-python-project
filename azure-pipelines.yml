@@ -35,20 +35,6 @@ steps:
     cliSources: '.'
 
 
-- script: |
-    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
-    unzip sonar-scanner-cli-4.7.0.2747-linux.zip
-    export PATH=$(pwd)/sonar-scanner-4.7.0.2747-linux/bin:$PATH
-    sonar-scanner \
-      -Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
-      -Dsonar.projectName=$(SONAR_PROJECT_NAME) \
-      -Dsonar.projectVersion=$(SONAR_PROJECT_VERSION) \
-      -Dsonar.sources=. \
-      -Dsonar.host.url=$(SONARQUBE_SERVER) \
-      -Dsonar.login=$(SONARQUBE_TOKEN) \
-      -X
-  displayName: 'Install and Run SonarQube Scanner with Debug'
-
 
 
 - script: |
