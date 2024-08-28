@@ -45,8 +45,10 @@ steps:
       -Dsonar.projectVersion=$(SONAR_PROJECT_VERSION) \
       -Dsonar.sources=. \
       -Dsonar.host.url=$(SONARQUBE_SERVER) \
-      -Dsonar.login=$(SONARQUBE_TOKEN)
-  displayName: 'Install and Run SonarQube Scanner'
+      -Dsonar.login=$(SONARQUBE_TOKEN) \
+      -X
+  displayName: 'Install and Run SonarQube Scanner with Debug'
+
 
 
 - script: |
