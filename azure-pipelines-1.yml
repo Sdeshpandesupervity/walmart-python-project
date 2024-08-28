@@ -41,8 +41,7 @@ steps:
       sonar.login=$(SONARQUBE_TOKEN)
   displayName: 'Prepare SonarQube Analysis'
 
-- task: SonarQubeAnalyze@6
-  displayName: 'Run SonarQube Analysis'
+
 
 - task: SonarQubePublish@6
   inputs:
