@@ -33,10 +33,14 @@ steps:
     cliProjectKey: 'Infra-Test_Infra-Test_c5e09591-38a9-4945-855d-ef8425949b9b'
     cliProjectName: 'walmart-python'
     cliSources: '.'
-    
-- task: SonarQubeAnalyze@6
-  inputs:
-    jdkversion: 'JAVA_HOME_17_X64'
+- script: |
+    if [ "$(SONARQUBE_EDITION)" = "Developer" ]; then
+      sonar-scanner -Dsonar.branch.name=$(Build.SourceBranchName)
+    else
+      sonar-scanner
+    fi
+  displayName: 'Run SonarQube Scanner with Conditional Branch Analysis'
+
 - script: |
     wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
     unzip sonar-scanner-cli-4.7.0.2747-linux.zip
