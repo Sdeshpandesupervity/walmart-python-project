@@ -38,16 +38,7 @@ steps:
 - script: |
     wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
     unzip sonar-scanner-cli-4.7.0.2747-linux.zip
-    export PATH=$PATH:$(pwd)/sonar-scanner-4.7.0.2747-linux/bin
-  displayName: 'Install SonarQube Scanner'
-- script: |
-    export PATH=$PATH:/path/to/sonar-scanner/bin
-  displayName: 'Add SonarQube Scanner to PATH'
-- script: sonar-scanner
-  displayName: 'Run SonarQube Scanner'
-
-
-- script: |
+    export PATH=$(pwd)/sonar-scanner-4.7.0.2747-linux/bin:$PATH
     sonar-scanner \
       -Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
       -Dsonar.projectName=$(SONAR_PROJECT_NAME) \
@@ -55,7 +46,8 @@ steps:
       -Dsonar.sources=. \
       -Dsonar.host.url=$(SONARQUBE_SERVER) \
       -Dsonar.login=$(SONARQUBE_TOKEN)
-  displayName: 'Run SonarQube Analysis'
+  displayName: 'Install and Run SonarQube Scanner'
+
 
 - script: |
     echo "Running tests..."
