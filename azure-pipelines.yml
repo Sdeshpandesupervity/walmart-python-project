@@ -25,7 +25,18 @@ steps:
     python -m pip install --upgrade pip
     pip install -r requirements.txt.txt
   displayName: 'Install dependencies'
-
+- task: SonarQubePrepare@6
+  inputs:
+    SonarQube: 'sonarqube'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'Infra-Test_Infra-Test_c5e09591-38a9-4945-855d-ef8425949b9b'
+    cliProjectName: 'walmart-python'
+    cliSources: '.'
+    
+- task: SonarQubeAnalyze@6
+  inputs:
+    jdkversion: 'JAVA_HOME_17_X64'
 - script: |
     wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
     unzip sonar-scanner-cli-4.7.0.2747-linux.zip
@@ -53,17 +64,7 @@ steps:
     # Example test command; replace with your actual test command
     pytest
   displayName: 'Run tests'
-- task: SonarQubePrepare@6
-  inputs:
-    SonarQube: 'sonarqube'
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: 'Infra-Test_Infra-Test_c5e09591-38a9-4945-855d-ef8425949b9b'
-    cliProjectName: 'walmart-python'
-    cliSources: '.'
-- task: SonarQubeAnalyze@6
-  inputs:
-    jdkversion: 'JAVA_HOME_17_X64'
+
 - task: SonarQubePublish@6
   inputs:
     pollingTimeoutSec: '300'
