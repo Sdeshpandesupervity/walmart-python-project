@@ -27,11 +27,16 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
-    echo "Installing SonarQube Scanner..."
-    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ variables.SONAR_SCANNER_VERSION }}-linux.zip
-    unzip sonar-scanner-cli-${{ variables.SONAR_SCANNER_VERSION }}-linux.zip
-    export PATH=$PATH:$(pwd)/sonar-scanner-${{ variables.SONAR_SCANNER_VERSION }}-linux/bin
+    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
+    unzip sonar-scanner-cli-4.7.0.2747-linux.zip
+    export PATH=$PATH:$(pwd)/sonar-scanner-4.7.0.2747-linux/bin
   displayName: 'Install SonarQube Scanner'
+- script: |
+    export PATH=$PATH:/path/to/sonar-scanner/bin
+  displayName: 'Add SonarQube Scanner to PATH'
+- script: sonar-scanner
+  displayName: 'Run SonarQube Scanner'
+
 
 - script: |
     sonar-scanner \
@@ -48,3 +53,17 @@ steps:
     # Example test command; replace with your actual test command
     pytest
   displayName: 'Run tests'
+- task: SonarQubePrepare@6
+  inputs:
+    SonarQube: 'sonarqube'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'Infra-Test_Infra-Test_c5e09591-38a9-4945-855d-ef8425949b9b'
+    cliProjectName: 'walmart-python'
+    cliSources: '.'
+- task: SonarQubeAnalyze@6
+  inputs:
+    jdkversion: 'JAVA_HOME_17_X64'
+- task: SonarQubePublish@6
+  inputs:
+    pollingTimeoutSec: '300'
