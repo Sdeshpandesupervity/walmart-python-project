@@ -1,52 +1,47 @@
 trigger:
 - main
 
+pr:
+- main
+
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  SONARQUBE_PROJECT_KEY: 'Infra-Test_Infra-Test_c5e09591-38a9-4945-855d-ef8425949b9b'
-  SONARQUBE_PROJECT_NAME: 'walmart-python-project'
-  SONARQUBE_PROJECT_VERSION: '1.0'
-  SONARQUBE_SERVICE_CONNECTION: 'sonarqube'
-  SONARQUBE_URL: 'https://sonar-dev.supervity.ai'
-  BUILD_SOURCESDIRECTORY: $(Build.SourcesDirectory)
-  SONARQUBE_TOKEN: "sqa_18ca7a4a75620b175378099dc7730a1eddf2a3b6"
+  SONARQUBE_SERVER: 'https://sonar-dev.supervity.ai'
+  SONARQUBE_TOKEN: '$(sqa_18ca7a4a75620b175378099dc7730a1eddf2a3b6)'
+  SONAR_PROJECT_KEY: 'Infra-Test_Infra-Test_c5e09591-38a9-4945-855d-ef8425949b9b'
+  SONAR_PROJECT_NAME: 'walmart-python'
+  SONAR_PROJECT_VERSION: '1.0'
 
-stages:
-- stage: SonarQubeAnalysis
-  displayName: 'SonarQube Analysis'
-  jobs:
-  - job: Analyze
-    displayName: 'Analyze'
-    steps:
-    - checkout: self
-      persistCredentials: true
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
+  displayName: 'Set up Python'
 
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
-        addToPath: true
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
 
+- script: |
+    pip install sonar-scanner
+  displayName: 'Install SonarQube Scanner'
 
+- script: |
+    sonar-scanner \
+      -Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
+      -Dsonar.projectName=$(SONAR_PROJECT_NAME) \
+      -Dsonar.projectVersion=$(SONAR_PROJECT_VERSION) \
+      -Dsonar.sources=. \
+      -Dsonar.host.url=$(SONARQUBE_SERVER) \
+      -Dsonar.login=$(SONARQUBE_TOKEN)
+  displayName: 'Run SonarQube Analysis'
 
-    - task: SonarQubePrepare@6
-      inputs:
-        SonarQube: $(SONARQUBE_SERVICE_CONNECTION)
-        scannerMode: 'CLI'
-        configMode: 'manual'
-        cliProjectKey: $(SONARQUBE_PROJECT_KEY)
-        cliSources: $(BUILD_SOURCESDIRECTORY)/src
-        extraProperties: |
-          sonar.projectName=$(SONARQUBE_PROJECT_NAME)
-          sonar.projectVersion=$(SONARQUBE_PROJECT_VERSION)
-          sonar.host.url=$(SONARQUBE_URL)
-          sonar.login=$(SONARQUBE_TOKEN)  # Ensure SONARQUBE_TOKEN is set securely
-
-    - task: SonarQubeAnalyze@6
-      inputs:
-        jdkversion: 'JAVA_HOME_17_X64'  # Adjust if necessary
-
-    - task: SonarQubePublish@6
-      inputs:
-        pollingTimeoutSec: '300'
+- script: |
+    echo "Running tests..."
+    # Example test command; replace with your actual test command
+    pytest
+  displayName: 'Run tests'
