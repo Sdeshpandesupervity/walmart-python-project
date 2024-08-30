@@ -51,6 +51,8 @@ jobs:
         displayName: 'Prepare SonarQube Analysis'
 
       - task: SonarQubeAnalyze@6
+        inputs:
+          jdkversion: 'JAVA_HOME_17_X64'
         displayName: 'Run SonarQube Analysis'
 
       - task: SonarQubePublish@6
