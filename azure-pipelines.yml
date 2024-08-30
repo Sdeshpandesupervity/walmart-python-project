@@ -30,7 +30,8 @@ steps:
   inputs:
     SonarQube: 'sonarqube'  # Ensure this matches the name of your SonarQube service connection in Azure DevOps
     scannerMode: 'CLI'
-    configMode: 'manual'
+    configMode: 'file'
+    configFile: 'sonar-project.properties'
     cliProjectKey: '$(SONAR_PROJECT_KEY)'
     cliProjectName: '$(SONAR_PROJECT_NAME)'
     cliSources: '.'
@@ -40,6 +41,11 @@ steps:
       sonar.host.url=$(SONARQUBE_SERVER)
       sonar.login=$(SONARQUBE_TOKEN)
   displayName: 'Prepare SonarQube Analysis'
+- script: |
+    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+    unzip sonar-scanner-cli-4.6.2.2472-linux.zip
+    export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
+  displayName: 'Install SonarQube Scanner'
 
 - script: |
     sonar-scanner \
