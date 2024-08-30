@@ -8,7 +8,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  SONARQUBE_SERVER: 'https://sonar-dev.supervity.ai/'
+  SONARQUBE_SERVER: 'https://sonar-dev.supervity.ai'
   SONARQUBE_TOKEN: 'sqa_18ca7a4a75620b175378099dc7730a1eddf2a3b6'  # Ensure this is securely stored in Azure DevOps
   SONAR_PROJECT_KEY: 'python-test'
   SONAR_PROJECT_NAME: 'python-test'
