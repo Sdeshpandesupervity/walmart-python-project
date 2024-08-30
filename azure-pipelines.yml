@@ -48,6 +48,11 @@ jobs:
             sonar.host.url=$(SONARQUBE_SERVER)
             sonar.login=$(SONARQUBE_TOKEN)
             sonar.python.version=3.x
+             if [ "$(System.PullRequest.SourceBranch)" == "refs/heads/main" ]; then
+              echo "Running on the main branch, no branch-specific properties will be set."
+            else
+              echo "SonarQube branch analysis is only available in the Developer Edition or higher."
+            fi
         displayName: 'Prepare SonarQube Analysis'
 
       - task: SonarQubeAnalyze@6
