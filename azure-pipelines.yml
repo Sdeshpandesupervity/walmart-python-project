@@ -1,17 +1,16 @@
 trigger:
   branches:
     include:
-      - master
-
+      - main
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
   SONARQUBE_SERVER: 'https://sonar-dev.supervity.ai'
-  SONARQUBE_TOKEN: 'sqa_18ca7a4a75620b175378099dc7730a1eddf2a3b6'  # Store this securely in Azure DevOps
-  SONAR_PROJECT_KEY: 'test'
-  SONAR_PROJECT_NAME: 'test'
+  SONARQUBE_TOKEN: 'sqa_18ca7a4a75620b175378099dc7730a1eddf2a3b6'  # Ensure this is stored securely in Azure DevOps
+  SONAR_PROJECT_KEY: 'python-test'
+  SONAR_PROJECT_NAME: 'python-test'
   SONAR_PROJECT_VERSION: '1.0'
 
 jobs:
@@ -27,11 +26,11 @@ jobs:
           addToPath: true
         displayName: 'Set up Python'
 
-    # Install project dependencies
-    - script: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt.txt
-      displayName: 'Install dependencies'
+      # Install project dependencies
+      - script: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt.txt
+        displayName: 'Install dependencies'
 
       - task: SonarQubePrepare@6
         inputs:
